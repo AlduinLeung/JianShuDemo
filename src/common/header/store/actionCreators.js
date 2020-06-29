@@ -7,8 +7,9 @@ import {fromJS} from 'immutable'
 
 const changeList=(data)=>({
     type:actionTypes.CHANGE_LIST,            //ChangeList action，用来改变的是搜索框中的列表
-    data:fromJS(data)   //值得注意的是，在reducer里，state使用了Immutable来进行包裹，所以这里在派发给reducer的时候也应该是一个immutable的对象
- })
+    data:fromJS(data),   //值得注意的是，在reducer里，state使用了Immutable来进行包裹，所以这里在派发给reducer的时候也应该是一个immutable的对象
+    totalpage:Math.ceil(data.length/10)   //获取完数据改变列表项，进行分页操作，每页有10个
+ })  
 
 
 
@@ -32,4 +33,15 @@ export const getList=()=>{
             console.log('error')
         })
     }
-}
+};
+
+export const mouseEnter=()=>({
+    type: actionTypes.MOUSE_ENTER
+})
+export const mouseLeave=()=>({
+    type:actionTypes.MOUSE_LEAVE
+})
+export const changePage=(page)=>({
+    type:actionTypes.CHANGE_PAGE,
+    page
+})

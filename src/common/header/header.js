@@ -22,19 +22,24 @@ import {actionCreators} from './store/index'
 
 class Header extends Component{
     getListArea(){
-        if(this.props.focused){
+    const {page,totalpage}=this.props;
+    const newList=this.props.list.toJS();
+    const PageList=[];
+    for(let i=(page-1)*10;i<page*10;i++){
+        PageList.push(<SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>)
+    }
+        if(this.props.focused||this.props.mouseIn){
             return(
-                <SearchInfo>
+                <SearchInfo 
+                onMouseEnter={this.props.handleMouseEnter}
+                onMouseLeave={this.props.handleMouseLeave}
+                > 
                 <SearchInfoTitle>
                 热门搜索
-                <SearchSwitch>换一换</SearchSwitch>
+                <SearchSwitch onClick={()=>{this.props.handleChangePage(page,totalpage)}}>换一换</SearchSwitch>
                 </SearchInfoTitle>
                 <SearchInfoList>
-                    {
-                        this.props.list.map((item)=>{
-                            return (<SearchInfoItem key={item}>{item}</SearchInfoItem>)
-                        })
-                    }
+                    {PageList}
                 </SearchInfoList>
             </SearchInfo>
             )
@@ -149,7 +154,10 @@ const mapStateToProps=(state)=>{     //store里的数据映射到props上面
           // focused:state.header.focused  当使用了immutable.js以后，不可以这么直接使用数据
           //  focused: state.get('header').get('focused')
           focused:state.getIn(['header','focused']), //从store里取出的数据
-          list:state.getIn(['header','list'])    //从store中拿到的list数据
+          list:state.getIn(['header','list']),   //从store中拿到的list数据
+          page: state.getIn(['header','page']), ////从store中拿到page的数据，page在store里进行了分页
+          mouseIn:state.getIn(['header','mouseIn']),
+          totalpage:state.getIn(['header','totalpage'])
     }
 } 
 const mapDispatchToProps=(dispatch)=>{       //派发action
@@ -168,6 +176,20 @@ const mapDispatchToProps=(dispatch)=>{       //派发action
         //    };
            dispatch(actionCreators.searchBlur());   ///引入以后的action就可以不用写了，直接使用actionCreators的方法就行
                                                     //另外，在actionCreators里返回的也是一个对象
+        },
+        handleMouseEnter(){
+            dispatch(actionCreators.mouseEnter())
+        },
+        handleMouseLeave(){
+            dispatch(actionCreators.mouseLeave())
+        },
+        handleChangePage(page,totalpage){     //实现搜索框热词的切换功能
+            if(page<totalpage){
+                dispatch(actionCreators.changePage(page+1)) //如果当前的页码小于总页码，则点击切换下一页，page+1，如果已经是最后一页的话，就直接跳转到第一页
+            }else{
+                dispatch(actionCreators.changePage(1))
+            }
+            
         }
     }
 }

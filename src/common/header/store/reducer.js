@@ -2,7 +2,10 @@ import * as actionTypes from './actionTypes.js'
 import {fromJS} from 'immutable'
 const defaultState=fromJS({    //用immutable包装成immutable
     focused:false,
+    mouseIn:false,
     list:[],
+    page:1,
+    totalpage:1
 })
 
 export default(state=defaultState,action)=>{      //这里reducer导出的是纯函数
@@ -12,7 +15,17 @@ export default(state=defaultState,action)=>{      //这里reducer导出的是纯
         case actionTypes.SEARCH_BLUR:
             return state.set('focused',false);
         case actionTypes.CHANGE_LIST:
-            return state.set('list',action.data);
+            return state.merge({
+                list:action.data,
+                totalpage:action.totalpage
+            }); //性能相比多次调用还更高
+            // return state.set('list',action.data).set('totalpage',action.totalpage);   //在这里呢，可以使用immutable的 merge api来合并set方法
+        case actionTypes.MOUSE_ENTER:
+            return state.set('mouseIn',true)
+        case actionTypes.MOUSE_LEAVE:      
+            return state.set("mouseIn",false)
+        case actionTypes.CHANGE_PAGE:
+            return state.set("page",action.page)
             default: return state;
     }
     // if(action.type===actionTypes.SEARCH_FOCUS){
