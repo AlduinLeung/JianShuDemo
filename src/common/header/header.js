@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{Component}from 'react'
 import {GlobalStyle} from '../../statics/iconfont/iconfont.js'
 import {
     HeaderWrapper,
@@ -20,81 +20,75 @@ import {CSSTransition} from 'react-transition-group'
 import {connect} from 'react-redux';
 import {actionCreators} from './store/index'
 
-//隐藏SearchArea
-const getListArea=(show)=>{
-    if(show){
+class Header extends Component{
+    getListArea(){
+        if(this.props.focused){
+            return(
+                <SearchInfo>
+                <SearchInfoTitle>
+                热门搜索
+                <SearchSwitch>换一换</SearchSwitch>
+                </SearchInfoTitle>
+                <SearchInfoList>
+                    {
+                        this.props.list.map((item)=>{
+                            return (<SearchInfoItem key={item}>{item}</SearchInfoItem>)
+                        })
+                    }
+                </SearchInfoList>
+            </SearchInfo>
+            )
+        }else{
+            return null
+        }
+    }
+    render(){
         return(
-            <SearchInfo>
-            <SearchInfoTitle>
-            热门搜索
-            <SearchSwitch>换一换</SearchSwitch>
-            </SearchInfoTitle>
-            <SearchInfoList>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            </SearchInfoList>
-        </SearchInfo>
-        )
-    }else{
-        return null
+            <HeaderWrapper>
+            <GlobalStyle/>
+            <Logo href='./'/>
+            <Nav>
+            <NavItem className='left active'>首页</NavItem>
+            <NavItem className='left'>下载app</NavItem>
+            <SearchWrapper>
+            {/* 用CSSTransition在外部包裹，实现动画效果 */}
+            <CSSTransition
+            timeout={200}
+            in={this.props.focused}     //csstransition 会不定时的向里面添加class
+            classNames="slide"
+            >
+            <NavSearch  
+            className={this.props.focused ? 'focused':''}
+            onFocus={this.props.handleInputFoucus}
+            onBlur={this.props.handleInputBlur}
+            >
+            </NavSearch>
+            </CSSTransition>
+            <span className={this.props.focused ? 'focused iconfont':'iconfont'}>&#xe60c;</span>
+            {this.getListArea()}  
+            </SearchWrapper>
+            <NavItem className='right'>登录</NavItem>
+            <NavItem className='right'> </NavItem>
+            </Nav>
+            <Addition>
+            <Button className='writing'><span className="iconfont">&#xe615;</span>写文章</Button>
+            <Button className='reg'>注册</Button>
+            </Addition>
+            
+            </HeaderWrapper>)
     }
 }
+ 
+ 
 
-const Header=(props)=>{
-        return (
-        <HeaderWrapper>
-        <GlobalStyle/>
-        <Logo href='./'/>
-        <Nav>
-        <NavItem className='left active'>首页</NavItem>
-        <NavItem className='left'>下载app</NavItem>
-        <SearchWrapper>
-        {/* 用CSSTransition在外部包裹，实现动画效果 */}
-        <CSSTransition
-        timeout={200}
-        in={props.focused}     //csstransition 会不定时的向里面添加class
-        classNames="slide"
-        >
-        <NavSearch  
-        className={props.focused ? 'focused':''}
-        onFocus={props.handleInputFoucus}
-        onBlur={props.handleInputBlur}
-        >
-        </NavSearch>
-        </CSSTransition>
-        <span className={props.focused ? 'focused iconfont':'iconfont'}>&#xe60c;</span>
-        {/* 这里是热门搜索 */}
-        {/* <SearchInfo>
-            <SearchInfoTitle>
-            热门搜索
-            <SearchSwitch>换一换</SearchSwitch>
-            </SearchInfoTitle>
-            <SearchInfoList>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            <SearchInfoItem>教育</SearchInfoItem>
-            </SearchInfoList>
-        </SearchInfo> */}
-        {/* 这里的设计思路是当聚焦时，搜索框弹出 */}
-        {getListArea(props.focused)}  
-        </SearchWrapper>
-        <NavItem className='right'>登录</NavItem>
-        <NavItem className='right'> </NavItem>
-        </Nav>
-        <Addition>
-        <Button className='writing'><span className="iconfont">&#xe615;</span>写文章</Button>
-        <Button className='reg'>注册</Button>
-        </Addition>
-        
-        </HeaderWrapper>)
-}
+
+//隐藏SearchArea
+// const getListArea=(show)=>{
+   
+// }
+
+       
+
 // class Header extends Component{
 //     // constructor(props){    当把state保存到store中的时候，constructor没有存在的价值
 //     //     super(props);
@@ -154,7 +148,8 @@ const mapStateToProps=(state)=>{     //store里的数据映射到props上面
     return{ 
           // focused:state.header.focused  当使用了immutable.js以后，不可以这么直接使用数据
           //  focused: state.get('header').get('focused')
-          focused:state.getIn(['header','focused'])
+          focused:state.getIn(['header','focused']), //从store里取出的数据
+          list:state.getIn(['header','list'])    //从store中拿到的list数据
     }
 } 
 const mapDispatchToProps=(dispatch)=>{       //派发action
@@ -163,7 +158,8 @@ const mapDispatchToProps=(dispatch)=>{       //派发action
             // const action=actionCreators.searchFocus();
             // const action={
             //     type:'search_focus'    
-            // };
+            // }
+            dispatch(actionCreators.getList())  //ajax
             dispatch(actionCreators.searchFocus());
         },
         handleInputBlur(){
