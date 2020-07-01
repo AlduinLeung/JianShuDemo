@@ -64,7 +64,7 @@ class Header extends Component{
             >
             <NavSearch  
             className={this.props.focused ? 'focused':''}
-            onFocus={this.props.handleInputFoucus}
+            onFocus={()=>this.props.handleInputFoucus(this.props.list)}
             onBlur={this.props.handleInputBlur}
             >
             </NavSearch>
@@ -162,12 +162,16 @@ const mapStateToProps=(state)=>{     //store里的数据映射到props上面
 } 
 const mapDispatchToProps=(dispatch)=>{       //派发action
     return{
-        handleInputFoucus(){
+        handleInputFoucus(list){
             // const action=actionCreators.searchFocus();
             // const action={
             //     type:'search_focus'    
             // }
-            dispatch(actionCreators.getList())  //ajax
+            console.log(list) //通过观察可以发现经过渲染以后的list的值会发生变化
+            if(list.size===0){
+                dispatch(actionCreators.getList())  //ajax
+            }
+            
             dispatch(actionCreators.searchFocus());
         },
         handleInputBlur(){

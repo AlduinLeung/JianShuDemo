@@ -8,7 +8,6 @@ export const GlobalStyle=createGlobalStyle`
   url('./iconfont.ttf?t=1593052797318') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
   url('./iconfont.svg?t=1593052797318#iconfont') format('svg'); /* iOS 4.1- */
 }
-
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
@@ -16,7 +15,6 @@ export const GlobalStyle=createGlobalStyle`
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
