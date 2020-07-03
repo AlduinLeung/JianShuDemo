@@ -1,10 +1,10 @@
-import React,{Component} from 'react'
+import React,{PureComponent} from 'react'
 import {RecommendWrapper,RecommendItem} from '../styled'
 import pic1 from '../../../statics/pic1.png'
 import pic2 from '../../../statics/pic2.png'
 import pic3 from '../../../statics/pic3.png'
 import pic4 from '../../../statics/pic4.png'
-class Recommend extends Component{
+class Recommend extends PureComponent{
     render(){
         return(
             <div>

@@ -25,7 +25,6 @@ export const getMoreList=()=>{
          axios.get('/api/homeList.json')
          .then((res)=>{
              const data=res.data.data.articleList;
-             console.log(data)
              dispatch(addHomeList(data))
          })
     }

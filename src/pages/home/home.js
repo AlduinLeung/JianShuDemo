@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React,{PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {actionCreators} from  './store/index'
 import {
@@ -9,7 +9,7 @@ import {
 } from './styled.js'
 import Recommend from './components/recommend'
 import List from './components/List'
-class Home extends Component{
+class Home extends PureComponent{
     handleScrollTop(){
         window.scrollTo(0,0)
     }
@@ -24,7 +24,7 @@ class Home extends Component{
             <Recommend />
             </HomeRight>
             {
-                this.props.showScroll? <BackTop>回到顶部</BackTop>:null
+                this.props.showScroll? <BackTop onClick={this.handleScrollTop}>回到顶部</BackTop>:null
             }
            </HomeWrapper>
         

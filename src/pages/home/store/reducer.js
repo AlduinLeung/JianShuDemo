@@ -36,7 +36,6 @@ export default(state=defaultState,action)=>{      //这里reducer导出的是纯
         case actionType.ADD_HOME_LIST:
             return state.set('articleList',state.get('articleList').concat(action.data))
         case actionType.TOGGLE_SCROLL_SHOW:
-            console.log(action.show)
             return state.set('showScroll',action.show)
         default:
             return state; 

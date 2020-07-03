@@ -84,4 +84,5 @@ border:solid 1px #ccc;
 font-size:14px;
 background-color:red;
 border-radius:10px;
+cursor:pointer;
 `

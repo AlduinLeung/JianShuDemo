@@ -1,4 +1,5 @@
 import React,{Component}from 'react'
+import {Link} from 'react-router-dom'
 import {GlobalStyle} from '../../statics/iconfont/iconfont.js'
 import {
     HeaderWrapper,
@@ -19,6 +20,7 @@ import {
 import {CSSTransition} from 'react-transition-group'
 import {connect} from 'react-redux';
 import {actionCreators} from './store/index'
+import {actionCreators as loginActionCreators} from '../../pages/login/store/index'
 
 class Header extends Component{
     getListArea(){
@@ -51,7 +53,9 @@ class Header extends Component{
         return(
             <HeaderWrapper>
             <GlobalStyle/>
-            <Logo href='./'/>
+            <Link to='/'>
+            <Logo />
+            </Link>
             <Nav>
             <NavItem className='left active'>首页</NavItem>
             <NavItem className='left'>下载app</NavItem>
@@ -72,12 +76,20 @@ class Header extends Component{
             <span className={this.props.focused ? 'focused iconfont':'iconfont'}>&#xe60c;</span>
             {this.getListArea()}  
             </SearchWrapper>
-            <NavItem className='right'>登录</NavItem>
+            {
+                this.props.login?
+                <NavItem className='right'onClick={this.props.logout}>退出</NavItem>
+                :<Link to='/login'>
+                <NavItem className='right'>登录</NavItem>
+                </Link>
+            }
             <NavItem className='right'> </NavItem>
             </Nav>
             <Addition>
+            <Link to='/write'>
             <Button className='writing'><span className="iconfont">&#xe615;</span>写文章</Button>
             <Button className='reg'>注册</Button>
+            </Link>
             </Addition>
             
             </HeaderWrapper>)
@@ -157,7 +169,8 @@ const mapStateToProps=(state)=>{     //store里的数据映射到props上面
           list:state.getIn(['header','list']),   //从store中拿到的list数据
           page: state.getIn(['header','page']), ////从store中拿到page的数据，page在store里进行了分页
           mouseIn:state.getIn(['header','mouseIn']),
-          totalpage:state.getIn(['header','totalpage'])
+          totalpage:state.getIn(['header','totalpage']),
+          login:state.getIn(['login','login'])
     }
 } 
 const mapDispatchToProps=(dispatch)=>{       //派发action
@@ -194,6 +207,9 @@ const mapDispatchToProps=(dispatch)=>{       //派发action
                 dispatch(actionCreators.changePage(1))
             }
             
+        },
+        logout(){
+            dispatch(loginActionCreators.logout())
         }
     }
 }
